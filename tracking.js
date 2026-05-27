@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function () {
     params.get("condition") || sessionStorage.getItem("condition") || "1";
 
   if (!participantId) {
-    if (crypto.randomUUID) {
+    if (window.crypto && crypto.randomUUID) {
       participantId = crypto.randomUUID();
     } else {
       participantId =
@@ -27,9 +27,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const endEvaluationElements = Array.from(
-    document.querySelectorAll("a, button")
+    document.querySelectorAll("#endEvaluation, a, button")
   ).filter(function (el) {
-    return el.textContent.trim().toLowerCase().includes("end evaluation");
+    return (
+      el.id === "endEvaluation" ||
+      el.textContent.trim().toLowerCase().includes("end evaluation")
+    );
   });
 
   endEvaluationElements.forEach(function (el) {
@@ -57,15 +60,9 @@ document.addEventListener("DOMContentLoaded", function () {
         sessionStorage.getItem("site_start_ts")
       );
 
-      finalSurveyUrl.searchParams.set(
-        "site_end_ts",
-        siteEnd.toISOString()
-      );
+      finalSurveyUrl.searchParams.set("site_end_ts", siteEnd.toISOString());
 
-      finalSurveyUrl.searchParams.set(
-        "site_duration_sec",
-        siteDurationSec
-      );
+      finalSurveyUrl.searchParams.set("site_duration_sec", siteDurationSec);
 
       finalSurveyUrl.searchParams.set(
         "final_survey_start_ts",
